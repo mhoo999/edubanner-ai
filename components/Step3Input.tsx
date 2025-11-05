@@ -144,6 +144,8 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
           {/* 배너 크기 프리셋 */}
           <div className="mb-2 flex flex-wrap gap-2">
             {[
+              { label: '웹용', w: 1920, h: 500 },
+              { label: '모바일용', w: 750, h: 750 },
               { label: 'Facebook', w: 1200, h: 628 },
               { label: 'Instagram', w: 1080, h: 1080 },
               { label: 'Twitter', w: 1200, h: 675 },
