@@ -4,51 +4,12 @@ import React, { useState } from 'react';
 import Step2Recommend from '@/components/Step2Recommend';
 import Step3Input from '@/components/Step3Input';
 import Step4Result from '@/components/Step4Result';
+import { ThemeRecommendation } from '@/lib/claude';
 
 enum Step {
   ThemeRecommend,
   DetailInput,
   Result,
-}
-
-interface ThemeRecommendation {
-  concept: string;
-  score: number;
-  colors: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    background: string;
-    text: string;
-  };
-  typography: {
-    title: {
-      font: string;
-      size: string;
-      letterSpacing: string;
-      lineHeight: string;
-    };
-    subtitle: {
-      font: string;
-      size: string;
-      letterSpacing: string;
-    };
-    body: {
-      font: string;
-      size: string;
-    };
-  };
-  layout: {
-    structure: string;
-    padding: string;
-    alignment: string;
-  };
-  visuals: {
-    imageStyle: string;
-    graphics: string;
-    effects: string;
-  };
-  mood: string;
 }
 
 export default function Home() {

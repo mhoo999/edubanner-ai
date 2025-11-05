@@ -4,6 +4,46 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 })
 
+export interface ThemeRecommendation {
+  concept: string
+  score: number
+  colors: {
+    primary: string
+    secondary: string
+    accent: string
+    background: string
+    text: string
+  }
+  typography: {
+    title: {
+      font: string
+      size: string
+      letterSpacing: string
+      lineHeight: string
+    }
+    subtitle: {
+      font: string
+      size: string
+      letterSpacing: string
+    }
+    body: {
+      font: string
+      size: string
+    }
+  }
+  layout: {
+    structure: string
+    padding: string
+    alignment: string
+  }
+  visuals: {
+    imageStyle: string
+    graphics: string
+    effects: string
+  }
+  mood: string
+}
+
 export async function getThemeRecommendations(
   purpose: string,
   keywords: string,
@@ -130,7 +170,7 @@ Example format:
 }
 
 export async function generateLayout(
-  theme: any,
+  theme: ThemeRecommendation,
   size: { width: number; height: number },
   textLines: string[],
   hasImage: boolean,
@@ -239,7 +279,9 @@ Create a comprehensive layout specification that STRICTLY FOLLOWS the theme's de
       response.content.length === 0 ||
       response.content[0].type !== 'text'
     ) {
-      console.error('Error generating layout: No text content found in response')
+      console.error(
+        'Error generating layout: No text content found in response'
+      )
       return 'Error generating layout: No text content found.'
     }
     return response.content[0].text

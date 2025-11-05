@@ -1,44 +1,5 @@
 import React, { useState } from 'react';
-
-interface ThemeRecommendation {
-  concept: string;
-  score: number;
-  colors: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    background: string;
-    text: string;
-  };
-  typography: {
-    title: {
-      font: string;
-      size: string;
-      letterSpacing: string;
-      lineHeight: string;
-    };
-    subtitle: {
-      font: string;
-      size: string;
-      letterSpacing: string;
-    };
-    body: {
-      font: string;
-      size: string;
-    };
-  };
-  layout: {
-    structure: string;
-    padding: string;
-    alignment: string;
-  };
-  visuals: {
-    imageStyle: string;
-    graphics: string;
-    effects: string;
-  };
-  mood: string;
-}
+import { ThemeRecommendation } from '@/lib/claude';
 
 interface Step2RecommendProps {
   onThemeSelected: (theme: ThemeRecommendation) => void;
