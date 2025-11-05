@@ -21,6 +21,15 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
     setIsLoading(true);
     setError(null);
     try {
+      // 배너 크기 검증
+      const finalWidth = width >= 100 && width <= 5000 ? width : 1200;
+      const finalHeight = height >= 100 && height <= 5000 ? height : 628;
+      
+      if (finalWidth !== width || finalHeight !== height) {
+        setWidth(finalWidth);
+        setHeight(finalHeight);
+      }
+      
       const textLines = textContent.split('\n').filter(line => line.trim() !== '');
       
       // 타임아웃 설정 (60초)
@@ -33,7 +42,7 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             theme: selectedTheme,
-            size: { width, height },
+            size: { width: finalWidth, height: finalHeight },
             textLines,
             hasImage,
             imageType: hasImage ? (imageType || imageFileName || '참고 이미지') : '',
@@ -159,11 +168,21 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
               type="number"
               min="100"
               max="5000"
+              step="1"
               className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              value={width}
+              value={width || ''}
               onChange={(e) => {
+                const val = e.target.value === '' ? 0 : Number(e.target.value);
+                if (isNaN(val) || val < 0) return;
+                setWidth(val);
+              }}
+              onBlur={(e) => {
                 const val = Number(e.target.value);
-                if (val >= 100 && val <= 5000) setWidth(val);
+                if (isNaN(val) || val < 100) {
+                  setWidth(1200);
+                } else if (val > 5000) {
+                  setWidth(5000);
+                }
               }}
               placeholder="1200"
             />
@@ -172,11 +191,21 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
               type="number"
               min="100"
               max="5000"
+              step="1"
               className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              value={height}
+              value={height || ''}
               onChange={(e) => {
+                const val = e.target.value === '' ? 0 : Number(e.target.value);
+                if (isNaN(val) || val < 0) return;
+                setHeight(val);
+              }}
+              onBlur={(e) => {
                 const val = Number(e.target.value);
-                if (val >= 100 && val <= 5000) setHeight(val);
+                if (isNaN(val) || val < 100) {
+                  setHeight(628);
+                } else if (val > 5000) {
+                  setHeight(5000);
+                }
               }}
               placeholder="628"
             />

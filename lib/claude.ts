@@ -189,12 +189,21 @@ You are a senior web designer specializing in the Korean education industry. Gen
 ${JSON.stringify(theme, null, 2)}
 
 **Banner Specifications:**
-- Size: ${size.width}x${size.height}px
+- Size: ${size.width}x${size.height}px (CRITICAL: All font sizes, spacing, and element sizes MUST be scaled proportionally to this banner size)
 - Text Content: ${textLines.join('\n')}
 - Image: ${hasImage ? `Yes, type: ${imageType}` : 'No'}
 
+**IMPORTANT: Banner Size Scaling Rules:**
+- Calculate scale factor: base size is 1200x628px
+- For ${size.width}x${size.height}px banner, scale factor is approximately ${(size.width / 1200).toFixed(2)}x
+- ALL font sizes must be multiplied by this scale factor
+- ALL spacing (padding, margins) must be multiplied by this scale factor
+- ALL element sizes (icons, graphics) must be multiplied by this scale factor
+- Example: If base font size is 52px and scale factor is 1.5x, use 78px
+- Example: If base padding is 40px and scale factor is 0.8x, use 32px
+
 **Your Task:**
-Create a comprehensive layout specification that STRICTLY FOLLOWS the theme's design system. The output must be in Korean and include:
+Create a comprehensive layout specification that STRICTLY FOLLOWS the theme's design system AND the banner size. The output must be in Korean and include:
 
 1. **배경 (Background)**
    - Use the theme's primary and secondary colors
@@ -227,11 +236,12 @@ Create a comprehensive layout specification that STRICTLY FOLLOWS the theme's de
    - Describe alignment strategy
 
 **Korean Education Banner Best Practices:**
-- Left-align major text blocks with generous left padding (8-12%)
+- Left-align major text blocks with generous left padding (8-12% of banner width)
 - Place primary CTA or image on the right (60-80% X position)
 - Vertical spacing: Title at 20-25% Y, subtitle at 35-40% Y, body at 50-55% Y
 - Use theme colors consistently throughout
 - Ensure readability with sufficient contrast
+- **CRITICAL: All measurements must be calculated based on the actual banner size (${size.width}x${size.height}px), not fixed pixel values**
 
 **Output Format (in Korean):**
 ## 디자인 컨셉
