@@ -53,7 +53,7 @@ const Step4Result: React.FC<Step4ResultProps> = ({ generatedLayout, onReset, onE
                 // 클립보드 복사 실패 시 무시
               }
             }}
-            className="inline-flex items-center hover:bg-blue-50 px-1 py-0.5 rounded transition-colors group"
+            className="inline-flex items-center hover:bg-blue-50 px-1 py-0.5 rounded transition-colors group cursor-pointer"
             title={`${part} 클릭하여 복사`}
           >
             <span
@@ -136,7 +136,7 @@ const Step4Result: React.FC<Step4ResultProps> = ({ generatedLayout, onReset, onE
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <button
           onClick={handleCopyLayout}
-          className="px-6 py-4 text-white text-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+          className="px-6 py-4 text-white text-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -145,7 +145,7 @@ const Step4Result: React.FC<Step4ResultProps> = ({ generatedLayout, onReset, onE
         </button>
         <button
           onClick={handleDownload}
-          className="px-6 py-4 text-white text-lg font-semibold bg-gradient-to-r from-green-600 to-green-700 rounded-lg hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+          className="px-6 py-4 text-white text-lg font-semibold bg-gradient-to-r from-green-600 to-green-700 rounded-lg hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -155,7 +155,7 @@ const Step4Result: React.FC<Step4ResultProps> = ({ generatedLayout, onReset, onE
         {onEdit ? (
           <button
             onClick={onEdit}
-            className="px-6 py-4 text-gray-700 text-lg font-semibold bg-white border-2 border-blue-300 rounded-lg hover:bg-blue-50 hover:border-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-200 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+            className="px-6 py-4 text-gray-700 text-lg font-semibold bg-white border-2 border-blue-300 rounded-lg hover:bg-blue-50 hover:border-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-200 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -165,7 +165,7 @@ const Step4Result: React.FC<Step4ResultProps> = ({ generatedLayout, onReset, onE
         ) : (
           <button
             onClick={onReset}
-            className="px-6 py-4 text-gray-700 text-lg font-semibold bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+            className="px-6 py-4 text-gray-700 text-lg font-semibold bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />

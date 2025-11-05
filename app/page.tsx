@@ -92,14 +92,21 @@ export default function Home() {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
-            <div>
+            <button
+              onClick={() => {
+                setCurrentStep(Step.ThemeRecommend);
+                setSelectedTheme(null);
+                setGeneratedLayout('');
+              }}
+              className="text-left hover:opacity-80 transition-opacity cursor-pointer"
+            >
               <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-600">
                 EduBanner AI
               </h1>
               <p className="mt-1 text-sm text-gray-600">
                 AI 기반 교육 배너 디자인 어시스턴트
               </p>
-            </div>
+            </button>
             <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg">
               <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />

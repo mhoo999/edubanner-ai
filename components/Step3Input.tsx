@@ -90,7 +90,7 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
           </p>
           <button
             onClick={onBack}
-            className="px-4 py-2 text-sm font-medium text-blue-700 bg-white border-2 border-blue-600 rounded-lg hover:bg-blue-50 transition-all shadow-sm"
+            className="px-4 py-2 text-sm font-medium text-blue-700 bg-white border-2 border-blue-600 rounded-lg hover:bg-blue-50 transition-all shadow-sm cursor-pointer"
           >
             ← 변경하기
           </button>
@@ -289,7 +289,7 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
       {/* 생성 버튼 */}
       <button
         onClick={handleGenerateLayout}
-        className="w-full px-6 py-4 text-white text-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full px-6 py-4 text-white text-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         disabled={isLoading || !textContent.trim()}
       >
         {isLoading ? (
