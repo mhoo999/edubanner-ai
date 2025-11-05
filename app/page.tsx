@@ -56,7 +56,11 @@ export default function Home() {
         return null;
       case Step.Result:
         return (
-          <Step4Result generatedLayout={generatedLayout} onReset={handleReset} />
+          <Step4Result 
+            generatedLayout={generatedLayout} 
+            onReset={handleReset}
+            onEdit={() => setCurrentStep(Step.DetailInput)}
+          />
         );
       default:
         return (

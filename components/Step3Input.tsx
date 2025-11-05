@@ -89,12 +89,35 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
         <p className="text-sm text-gray-700 mb-4 leading-relaxed">{selectedTheme.concept}</p>
 
         {/* 색상 팔레트 미리보기 */}
-        <div className="flex gap-2">
-          <div className="w-10 h-10 rounded-lg border-2 border-white shadow-md hover:scale-110 transition-transform" style={{backgroundColor: selectedTheme.colors.primary}} title={selectedTheme.colors.primary}></div>
-          <div className="w-10 h-10 rounded-lg border-2 border-white shadow-md hover:scale-110 transition-transform" style={{backgroundColor: selectedTheme.colors.secondary}} title={selectedTheme.colors.secondary}></div>
-          <div className="w-10 h-10 rounded-lg border-2 border-white shadow-md hover:scale-110 transition-transform" style={{backgroundColor: selectedTheme.colors.accent}} title={selectedTheme.colors.accent}></div>
-          <div className="w-10 h-10 rounded-lg border-2 border-white shadow-md hover:scale-110 transition-transform" style={{backgroundColor: selectedTheme.colors.background}} title={selectedTheme.colors.background}></div>
-          <div className="w-10 h-10 rounded-lg border-2 border-white shadow-md hover:scale-110 transition-transform" style={{backgroundColor: selectedTheme.colors.text}} title={selectedTheme.colors.text}></div>
+        <div className="flex gap-2 flex-wrap">
+          {[
+            { color: selectedTheme.colors.primary, label: 'Primary' },
+            { color: selectedTheme.colors.secondary, label: 'Secondary' },
+            { color: selectedTheme.colors.accent, label: 'Accent' },
+            { color: selectedTheme.colors.background, label: 'Background' },
+            { color: selectedTheme.colors.text, label: 'Text' },
+          ].map((item) => (
+            <button
+              key={item.label}
+              type="button"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(item.color);
+                  // 간단한 피드백 (선택사항)
+                } catch (err) {
+                  // 클립보드 복사 실패 시 무시
+                }
+              }}
+              className="group relative flex flex-col items-center"
+            >
+              <div
+                className="w-10 h-10 rounded-lg border-2 border-white shadow-md hover:scale-110 transition-transform cursor-pointer"
+                style={{ backgroundColor: item.color }}
+                title={`${item.label}: ${item.color} (클릭하여 복사)`}
+              ></div>
+              <span className="mt-1 text-[10px] text-gray-600 group-hover:text-blue-600 transition-colors">{item.label}</span>
+            </button>
+          ))}
         </div>
       </div>
 
@@ -109,20 +132,52 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
             </svg>
             배너 크기 (px)
           </label>
+          {/* 배너 크기 프리셋 */}
+          <div className="mb-2 flex flex-wrap gap-2">
+            {[
+              { label: 'Facebook', w: 1200, h: 628 },
+              { label: 'Instagram', w: 1080, h: 1080 },
+              { label: 'Twitter', w: 1200, h: 675 },
+              { label: 'LinkedIn', w: 1200, h: 627 },
+              { label: 'YouTube', w: 2560, h: 1440 },
+            ].map((preset) => (
+              <button
+                key={preset.label}
+                type="button"
+                onClick={() => {
+                  setWidth(preset.w);
+                  setHeight(preset.h);
+                }}
+                className="px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 hover:border-blue-300 transition-all"
+              >
+                {preset.label}
+              </button>
+            ))}
+          </div>
           <div className="flex items-center gap-3">
             <input
               type="number"
+              min="100"
+              max="5000"
               className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               value={width}
-              onChange={(e) => setWidth(Number(e.target.value))}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                if (val >= 100 && val <= 5000) setWidth(val);
+              }}
               placeholder="1200"
             />
             <span className="text-gray-500 font-medium">×</span>
             <input
               type="number"
+              min="100"
+              max="5000"
               className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               value={height}
-              onChange={(e) => setHeight(Number(e.target.value))}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                if (val >= 100 && val <= 5000) setHeight(val);
+              }}
               placeholder="628"
             />
           </div>
