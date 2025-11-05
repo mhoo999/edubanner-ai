@@ -63,7 +63,20 @@ Based on the following information, recommend SIX diverse and creative banner de
 - Purpose: ${purpose}
 - Keywords: ${keywords}
 - Mood: ${mood}
-${existingThemes.length > 0 ? `\n\n**IMPORTANT: Avoid duplicating these existing themes:**\n${existingThemes.map((t, i) => `${i + 1}. ${t.concept} (Colors: ${t.colors.primary}, ${t.colors.secondary}, ${t.colors.accent})`).join('\n')}\n\nGenerate COMPLETELY DIFFERENT themes with unique color palettes and concepts.` : ''}
+${
+  existingThemes.length > 0
+    ? `\n\n**IMPORTANT: Avoid duplicating these existing themes:**\n${existingThemes
+        .map(
+          (t, i) =>
+            `${i + 1}. ${t.concept} (Colors: ${t.colors.primary}, ${
+              t.colors.secondary
+            }, ${t.colors.accent})`
+        )
+        .join(
+          '\n'
+        )}\n\nGenerate COMPLETELY DIFFERENT themes with unique color palettes and concepts.`
+    : ''
+}
 
 Analyze successful Korean education banner patterns and provide comprehensive design guides that can be directly used by designers. 
 
@@ -160,7 +173,7 @@ Example format:
   try {
     const response = await anthropic.messages.create({
       model: 'claude-3-haiku-20240307',
-      max_tokens: 3096,
+      max_tokens: 6144, // 6개 테마를 위해 토큰 증가 (약 2배)
       messages: [{ role: 'user', content: prompt }],
     })
 
