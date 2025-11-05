@@ -59,7 +59,7 @@ export async function getThemeRecommendations(
   const prompt = `
 You are a senior web designer specializing in the Korean education industry with 10+ years of experience. You have deep knowledge of design patterns used by major Korean education platforms like Hunet, Kyung Young, Mega Academy, Withus, Seoul Digital, and Baeoom.
 
-Based on the following information, recommend SIX diverse and creative banner design themes with varied color palettes:
+Based on the following information, recommend FIVE diverse and creative banner design themes with varied color palettes:
 - Purpose: ${purpose}
 - Keywords: ${keywords}
 - Mood: ${mood}
@@ -173,7 +173,7 @@ Example format:
   try {
     const response = await anthropic.messages.create({
       model: 'claude-3-haiku-20240307',
-      max_tokens: 6144, // 6개 테마를 위해 토큰 증가 (약 2배)
+      max_tokens: 4096, // claude-3-haiku 모델의 최대 토큰 제한
       messages: [{ role: 'user', content: prompt }],
     })
 
@@ -186,11 +186,14 @@ Example format:
       throw new Error('Invalid response from AI: No text content found')
     }
     const responseText = response.content[0].text
-    console.log('AI Response (first 500 chars):', responseText.substring(0, 500))
-    
+    console.log(
+      'AI Response (first 500 chars):',
+      responseText.substring(0, 500)
+    )
+
     // Try to extract JSON - handle both code blocks and plain JSON
     let jsonString: string | null = null
-    
+
     // First try: code block with ```json
     const codeBlockMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/)
     if (codeBlockMatch) {
@@ -208,10 +211,15 @@ Example format:
         }
       }
     }
-    
+
     if (!jsonString) {
       console.error('No JSON found in response. Full response:', responseText)
-      throw new Error(`Invalid JSON response from AI. Response: ${responseText.substring(0, 200)}...`)
+      throw new Error(
+        `Invalid JSON response from AI. Response: ${responseText.substring(
+          0,
+          200
+        )}...`
+      )
     }
 
     try {
@@ -223,8 +231,15 @@ Example format:
       return parsedResponse.themes
     } catch (parseError) {
       console.error('JSON parse error:', parseError)
-      console.error('JSON string that failed to parse:', jsonString.substring(0, 500))
-      throw new Error(`Failed to parse JSON: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`)
+      console.error(
+        'JSON string that failed to parse:',
+        jsonString.substring(0, 500)
+      )
+      throw new Error(
+        `Failed to parse JSON: ${
+          parseError instanceof Error ? parseError.message : 'Unknown error'
+        }`
+      )
     }
   } catch (error) {
     console.error('Error getting theme recommendations:', error)

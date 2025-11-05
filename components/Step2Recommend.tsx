@@ -59,7 +59,7 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
         } else {
           setRecommendedThemes(data.themes);
         }
-        setHasMore(data.themes.length >= 6); // 6개 이상이면 더 보기 가능
+        setHasMore(data.themes.length >= 5); // 5개 이상이면 더 보기 가능
       } catch (fetchError) {
         clearTimeout(timeoutId);
         if (fetchError instanceof Error && fetchError.name === 'AbortError') {
