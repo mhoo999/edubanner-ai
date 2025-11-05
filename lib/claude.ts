@@ -186,19 +186,50 @@ Example format:
       throw new Error('Invalid response from AI: No text content found')
     }
     const responseText = response.content[0].text
-    const jsonMatch = responseText.match(
-      /```json\s*([\s\S]*?)\s*```|({[\s\S]*})/
-    )
-    if (!jsonMatch) {
-      throw new Error('Invalid JSON response from AI')
+    console.log('AI Response (first 500 chars):', responseText.substring(0, 500))
+    
+    // Try to extract JSON - handle both code blocks and plain JSON
+    let jsonString: string | null = null
+    
+    // First try: code block with ```json
+    const codeBlockMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/)
+    if (codeBlockMatch) {
+      jsonString = codeBlockMatch[1]
+    } else {
+      // Second try: code block without language
+      const plainCodeBlock = responseText.match(/```\s*([\s\S]*?)\s*```/)
+      if (plainCodeBlock) {
+        jsonString = plainCodeBlock[1]
+      } else {
+        // Third try: find JSON object directly
+        const jsonObjectMatch = responseText.match(/\{[\s\S]*"themes"[\s\S]*\}/)
+        if (jsonObjectMatch) {
+          jsonString = jsonObjectMatch[0]
+        }
+      }
     }
-    const jsonString = jsonMatch[1] || jsonMatch[2]
+    
+    if (!jsonString) {
+      console.error('No JSON found in response. Full response:', responseText)
+      throw new Error(`Invalid JSON response from AI. Response: ${responseText.substring(0, 200)}...`)
+    }
 
-    const parsedResponse = JSON.parse(jsonString)
-    return parsedResponse.themes
+    try {
+      const parsedResponse = JSON.parse(jsonString)
+      if (!parsedResponse.themes || !Array.isArray(parsedResponse.themes)) {
+        console.error('Invalid themes array in response:', parsedResponse)
+        throw new Error('Response does not contain valid themes array')
+      }
+      return parsedResponse.themes
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError)
+      console.error('JSON string that failed to parse:', jsonString.substring(0, 500))
+      throw new Error(`Failed to parse JSON: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`)
+    }
   } catch (error) {
     console.error('Error getting theme recommendations:', error)
-    return []
+    // Re-throw the error so API route can handle it properly
+    throw error
   }
 }
 

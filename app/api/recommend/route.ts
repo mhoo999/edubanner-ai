@@ -11,6 +11,14 @@ export async function POST(request: Request) {
 
     const themes = await getThemeRecommendations(purpose, keywords, mood, existingThemes || []);
 
+    if (!themes || themes.length === 0) {
+      console.error('getThemeRecommendations returned empty array')
+      return NextResponse.json(
+        { error: '테마 추천 결과가 없습니다. 다시 시도해주세요.' },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json({ themes });
   } catch (error) {
     console.error('Error in /api/recommend:', error);
