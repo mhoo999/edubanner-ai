@@ -73,6 +73,7 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
           >
             <option value="">선택하세요</option>
             <option value="온라인 강의 모집">온라인 강의 모집</option>
+            <option value="수강안내">수강안내</option>
             <option value="웨비나/세미나 홍보">웨비나/세미나 홍보</option>
             <option value="교재/도서 출간 안내">교재/도서 출간 안내</option>
             <option value="합격/수강 후기 이벤트">합격/수강 후기 이벤트</option>
