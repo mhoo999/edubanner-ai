@@ -3,13 +3,13 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const { purpose, keywords, mood } = await request.json();
+    const { purpose, keywords, mood, existingThemes } = await request.json();
 
     if (!purpose || !keywords || !mood) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const themes = await getThemeRecommendations(purpose, keywords, mood);
+    const themes = await getThemeRecommendations(purpose, keywords, mood, existingThemes || []);
 
     return NextResponse.json({ themes });
   } catch (error) {

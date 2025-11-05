@@ -11,10 +11,17 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
   const [mood, setMood] = useState('');
   const [recommendedThemes, setRecommendedThemes] = useState<ThemeRecommendation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(false);
 
-  const handleRecommendThemes = async () => {
-    setIsLoading(true);
+  const handleRecommendThemes = async (loadMore = false) => {
+    if (loadMore) {
+      setIsLoadingMore(true);
+    } else {
+      setIsLoading(true);
+      setRecommendedThemes([]);
+    }
     setError(null);
     try {
       // 타임아웃 설정 (60초)
@@ -25,7 +32,12 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
         const response = await fetch('/api/recommend', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ purpose, keywords, mood }),
+          body: JSON.stringify({ 
+            purpose, 
+            keywords, 
+            mood,
+            existingThemes: loadMore ? recommendedThemes : []
+          }),
           signal: controller.signal,
         });
 
@@ -42,7 +54,12 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
         }
 
         const data = await response.json();
-        setRecommendedThemes(data.themes);
+        if (loadMore) {
+          setRecommendedThemes([...recommendedThemes, ...data.themes]);
+        } else {
+          setRecommendedThemes(data.themes);
+        }
+        setHasMore(data.themes.length >= 6); // 6개 이상이면 더 보기 가능
       } catch (fetchError) {
         clearTimeout(timeoutId);
         if (fetchError instanceof Error && fetchError.name === 'AbortError') {
@@ -54,6 +71,7 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
       setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
     } finally {
       setIsLoading(false);
+      setIsLoadingMore(false);
     }
   };
 
@@ -232,6 +250,34 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
             </div>
           ))}
         </div>
+        </div>
+      )}
+      
+      {/* 더 보기 버튼 */}
+      {recommendedThemes.length > 0 && hasMore && (
+        <div className="mt-6 flex justify-center">
+          <button
+            onClick={() => handleRecommendThemes(true)}
+            disabled={isLoadingMore}
+            className="px-6 py-3 text-blue-700 text-base font-semibold bg-blue-50 border-2 border-blue-300 rounded-lg hover:bg-blue-100 hover:border-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-200 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {isLoadingMore ? (
+              <>
+                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                더 많은 가이드 로딩 중...
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+                더 많은 디자인 가이드 보기
+              </>
+            )}
+          </button>
         </div>
       )}
     </div>

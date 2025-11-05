@@ -53,17 +53,31 @@ export interface ThemeRecommendation {
 export async function getThemeRecommendations(
   purpose: string,
   keywords: string,
-  mood: string
+  mood: string,
+  existingThemes: ThemeRecommendation[] = []
 ) {
   const prompt = `
 You are a senior web designer specializing in the Korean education industry with 10+ years of experience. You have deep knowledge of design patterns used by major Korean education platforms like Hunet, Kyung Young, Mega Academy, Withus, Seoul Digital, and Baeoom.
 
-Based on the following information, recommend THREE detailed banner design themes:
+Based on the following information, recommend SIX diverse and creative banner design themes with varied color palettes:
 - Purpose: ${purpose}
 - Keywords: ${keywords}
 - Mood: ${mood}
+${existingThemes.length > 0 ? `\n\n**IMPORTANT: Avoid duplicating these existing themes:**\n${existingThemes.map((t, i) => `${i + 1}. ${t.concept} (Colors: ${t.colors.primary}, ${t.colors.secondary}, ${t.colors.accent})`).join('\n')}\n\nGenerate COMPLETELY DIFFERENT themes with unique color palettes and concepts.` : ''}
 
-Analyze successful Korean education banner patterns and provide comprehensive design guides that can be directly used by designers.
+Analyze successful Korean education banner patterns and provide comprehensive design guides that can be directly used by designers. 
+
+**IMPORTANT: Color Diversity Requirements:**
+- DO NOT limit colors to only Navy/Blue + Orange/Gold combinations
+- Explore diverse color palettes including:
+  * Modern gradients (purple-pink, teal-cyan, coral-peach)
+  * Earth tones (brown-beige, olive-sage, terracotta)
+  * Vibrant combinations (magenta-cyan, yellow-lime, red-orange)
+  * Monochrome variations (grayscale, sepia, duotone)
+  * Pastel palettes (soft pink-lavender, mint-sky, peach-cream)
+  * Bold contrasts (black-white, deep purple-gold, navy-coral)
+- Each theme should have a UNIQUE color palette that stands out from others
+- Consider color psychology: trust (blues), energy (oranges/reds), growth (greens), creativity (purples), warmth (yellows/peaches)
 
 Provide the response in JSON format with a "themes" array. Each theme must include:
 
@@ -90,11 +104,11 @@ Provide the response in JSON format with a "themes" array. Each theme must inclu
 7. **mood** (string, Korean): 2-3 sentences about emotional tone
 
 Korean education banner design patterns to reference:
-- Color: Navy/Blue (#0269cc, #5064c8) for trust + Orange/Gold (#ff6465, #ffd800) for accent
+- Color: While Navy/Blue (#0269cc, #5064c8) + Orange/Gold (#ff6465, #ffd800) is common, EXPLORE diverse palettes beyond this
 - Fonts: Pretendard Bold 48-60px for titles, Medium 28-32px for subtitles, Regular 14-16px for body
-- Layout: Left text (60%) + Right image (40%), generous padding (30-40px)
-- Visuals: Real photos (classroom, students) + minimal icons + certificate badges
-- Tone: Professional yet approachable, trustworthy yet warm
+- Layout: Left text (60%) + Right image (40%), generous padding (30-40px), or center-aligned, or asymmetric layouts
+- Visuals: Real photos (classroom, students) + minimal icons + certificate badges, or illustrations, or abstract graphics
+- Tone: Professional yet approachable, trustworthy yet warm, or modern and dynamic, or elegant and sophisticated
 
 **All Korean text fields (concept, mood, and string values in objects) must be in Korean.**
 
@@ -189,13 +203,17 @@ You are a senior web designer specializing in the Korean education industry. Gen
 ${JSON.stringify(theme, null, 2)}
 
 **Banner Specifications:**
-- Size: ${size.width}x${size.height}px (CRITICAL: All font sizes, spacing, and element sizes MUST be scaled proportionally to this banner size)
+- Size: ${size.width}x${
+    size.height
+  }px (CRITICAL: All font sizes, spacing, and element sizes MUST be scaled proportionally to this banner size)
 - Text Content: ${textLines.join('\n')}
 - Image: ${hasImage ? `Yes, type: ${imageType}` : 'No'}
 
 **IMPORTANT: Banner Size Scaling Rules:**
 - Calculate scale factor: base size is 1200x628px
-- For ${size.width}x${size.height}px banner, scale factor is approximately ${(size.width / 1200).toFixed(2)}x
+- For ${size.width}x${size.height}px banner, scale factor is approximately ${(
+    size.width / 1200
+  ).toFixed(2)}x
 - ALL font sizes must be multiplied by this scale factor
 - ALL spacing (padding, margins) must be multiplied by this scale factor
 - ALL element sizes (icons, graphics) must be multiplied by this scale factor
@@ -241,7 +259,9 @@ Create a comprehensive layout specification that STRICTLY FOLLOWS the theme's de
 - Vertical spacing: Title at 20-25% Y, subtitle at 35-40% Y, body at 50-55% Y
 - Use theme colors consistently throughout
 - Ensure readability with sufficient contrast
-- **CRITICAL: All measurements must be calculated based on the actual banner size (${size.width}x${size.height}px), not fixed pixel values**
+- **CRITICAL: All measurements must be calculated based on the actual banner size (${
+    size.width
+  }x${size.height}px), not fixed pixel values**
 
 **Output Format (in Korean):**
 ## 디자인 컨셉
