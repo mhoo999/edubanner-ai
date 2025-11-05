@@ -160,8 +160,9 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
             accept="image/*"
             className="block w-full text-sm text-gray-600 file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             onChange={(e) => {
-              setHasImage(e.target.files && e.target.files.length > 0);
-              setImageType(e.target.files && e.target.files.length > 0 ? '로고 또는 아이콘' : '');
+              const hasFile = !!(e.target.files && e.target.files.length > 0);
+              setHasImage(hasFile);
+              setImageType(hasFile ? '로고 또는 아이콘' : '');
             }}
           />
           <p className="mt-2 text-xs text-gray-500">로고, 아이콘 등의 레퍼런스 이미지를 업로드하세요</p>
