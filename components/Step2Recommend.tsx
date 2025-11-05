@@ -127,7 +127,7 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
         </div>
       </div>
       <button
-        onClick={handleRecommendThemes}
+        onClick={() => handleRecommendThemes(false)}
         className="w-full px-6 py-4 mb-6 text-white text-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         disabled={isLoading || !purpose || !keywords || !mood}
       >
