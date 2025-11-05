@@ -6,9 +6,12 @@ interface Step4ResultProps {
 }
 
 const Step4Result: React.FC<Step4ResultProps> = ({ generatedLayout, onReset }) => {
+  const [copySuccess, setCopySuccess] = React.useState(false);
+
   const handleCopyLayout = () => {
     navigator.clipboard.writeText(generatedLayout);
-    alert('레이아웃이 클립보드에 복사되었습니다!');
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 3000);
   };
 
   // Renders a line of text, converting hex codes to color chips
@@ -52,27 +55,60 @@ const Step4Result: React.FC<Step4ResultProps> = ({ generatedLayout, onReset }) =
   };
 
   return (
-    <div className="flex flex-col items-center p-8 bg-white rounded-lg shadow-md w-[500px]">
-      <h2 className="mb-6 text-xl font-semibold text-gray-800">레이아웃 생성 완료!</h2>
+    <div className="w-full max-w-5xl mx-auto p-8 bg-white rounded-xl shadow-lg">
+      {/* Success Banner */}
+      <div className="mb-6 p-6 bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-300 rounded-xl">
+        <div className="flex items-center gap-3">
+          <div className="flex-shrink-0">
+            <svg className="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-1">레이아웃 생성 완료!</h2>
+            <p className="text-sm text-gray-600">
+              아래 레이아웃을 복사하여 디자인 작업에 활용하세요.
+            </p>
+          </div>
+        </div>
+      </div>
 
-      <div className="w-full p-4 mb-6 overflow-auto bg-gray-50 border border-gray-200 rounded-md max-h-96">
-        <div className="text-sm whitespace-pre-wrap">
+      {/* Copy Success Toast */}
+      {copySuccess && (
+        <div className="fixed top-8 right-8 z-50 p-4 bg-green-600 text-white rounded-lg shadow-xl flex items-center gap-3 animate-slide-in">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          <span className="font-semibold">클립보드에 복사되었습니다!</span>
+        </div>
+      )}
+
+      {/* Layout Display */}
+      <div className="w-full mb-6 p-6 overflow-auto bg-gradient-to-br from-gray-50 to-blue-50 border-2 border-gray-200 rounded-xl max-h-[600px] shadow-inner">
+        <div className="text-sm whitespace-pre-wrap leading-relaxed">
           {renderFormattedLayout(generatedLayout)}
         </div>
       </div>
 
-      <div className="flex w-full space-x-4">
+      {/* Action Buttons */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <button
           onClick={handleCopyLayout}
-          className="flex-1 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          className="px-6 py-4 text-white text-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
         >
-          📋 전체 복사
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          전체 복사
         </button>
         <button
           onClick={onReset}
-          className="flex-1 px-4 py-2 text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          className="px-6 py-4 text-gray-700 text-lg font-semibold bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
         >
-          🔄 다시 만들기
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          새로 만들기
         </button>
       </div>
     </div>
