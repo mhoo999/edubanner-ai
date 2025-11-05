@@ -267,9 +267,30 @@ Create a comprehensive layout specification that STRICTLY FOLLOWS the theme's de
    - Describe alignment strategy
 
 **Korean Education Banner Best Practices:**
-- Left-align major text blocks with generous left padding (8-12% of banner width)
-- Place primary CTA or image on the right (60-80% X position)
-- Vertical spacing: Title at 20-25% Y, subtitle at 35-40% Y, body at 50-55% Y
+
+**Banner Size-Specific Layout Guidelines:**
+
+1. **For 1920x500px (Web banners with margins):**
+   - Use generous padding and margins (10-15% of width)
+   - Left-align text blocks with comfortable spacing
+   - Place elements with breathing room - don't fill the entire space
+   - Vertical spacing: Title at 25-30% Y, subtitle at 40-45% Y, body at 55-60% Y
+   - Leave white space for visual balance
+
+2. **For 750x750px (Mobile square banners - full design):**
+   - Use minimal padding (5-8% of width) - fill the space effectively
+   - Can use center-aligned or full-width layouts
+   - Vertical spacing: Title at 20-25% Y, subtitle at 35-40% Y, body at 50-55% Y
+   - Maximize content area - design should feel complete and full
+
+3. **For other sizes:**
+   - Adjust padding proportionally: wider banners (aspect ratio > 2:1) use more padding like web banners
+   - Square or vertical banners (aspect ratio close to 1:1) use less padding like mobile banners
+   - Aspect ratio calculation: ${(size.width / size.height).toFixed(2)}:1
+
+**General Guidelines:**
+- Left-align major text blocks with padding appropriate to banner type
+- Place primary CTA or image on the right (60-80% X position) for wide banners
 - Use theme colors consistently throughout
 - Ensure readability with sufficient contrast
 - **CRITICAL: All measurements must be calculated based on the actual banner size (${
