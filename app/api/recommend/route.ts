@@ -14,6 +14,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ themes });
   } catch (error) {
     console.error('Error in /api/recommend:', error);
-    return NextResponse.json({ error: 'Failed to get theme recommendations' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    
+    // API 키 관련 에러인 경우 명확한 메시지 제공
+    if (errorMessage.includes('ANTHROPIC_API_KEY')) {
+      return NextResponse.json(
+        { error: 'API 키가 설정되지 않았습니다. 환경 변수를 확인해주세요.' },
+        { status: 500 }
+      );
+    }
+    
+    return NextResponse.json(
+      { error: `테마 추천 실패: ${errorMessage}` },
+      { status: 500 }
+    );
   }
 }

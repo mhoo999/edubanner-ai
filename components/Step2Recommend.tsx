@@ -17,19 +17,41 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/recommend', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ purpose, keywords, mood }),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to get theme recommendations');
+      // 타임아웃 설정 (60초)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
+      
+      try {
+        const response = await fetch('/api/recommend', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ purpose, keywords, mood }),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch {
+            throw new Error(`서버 오류 (${response.status})`);
+          }
+          throw new Error(errorData.error || '테마 추천에 실패했습니다.');
+        }
+
+        const data = await response.json();
+        setRecommendedThemes(data.themes);
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+          throw new Error('요청 시간이 초과되었습니다. 다시 시도해주세요.');
+        }
+        throw fetchError;
       }
-      const data = await response.json();
-      setRecommendedThemes(data.themes);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
     } finally {
       setIsLoading(false);
     }

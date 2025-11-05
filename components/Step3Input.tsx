@@ -1,44 +1,5 @@
 import React, { useState } from 'react';
-
-interface ThemeRecommendation {
-  concept: string;
-  score: number;
-  colors: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    background: string;
-    text: string;
-  };
-  typography: {
-    title: {
-      font: string;
-      size: string;
-      letterSpacing: string;
-      lineHeight: string;
-    };
-    subtitle: {
-      font: string;
-      size: string;
-      letterSpacing: string;
-    };
-    body: {
-      font: string;
-      size: string;
-    };
-  };
-  layout: {
-    structure: string;
-    padding: string;
-    alignment: string;
-  };
-  visuals: {
-    imageStyle: string;
-    graphics: string;
-    effects: string;
-  };
-  mood: string;
-}
+import { ThemeRecommendation } from '@/lib/claude';
 
 interface Step3InputProps {
   selectedTheme: ThemeRecommendation;
@@ -52,6 +13,7 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
   const [textContent, setTextContent] = useState('');
   const [hasImage, setHasImage] = useState(false);
   const [imageType, setImageType] = useState('');
+  const [imageFileName, setImageFileName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -60,27 +22,48 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
     setError(null);
     try {
       const textLines = textContent.split('\n').filter(line => line.trim() !== '');
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          theme: selectedTheme, // Pass entire theme object
-          size: { width, height },
-          textLines,
-          hasImage,
-          imageType,
-        }),
-      });
+      
+      // 타임아웃 설정 (60초)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
+      
+      try {
+        const response = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            theme: selectedTheme,
+            size: { width, height },
+            textLines,
+            hasImage,
+            imageType: hasImage ? (imageType || imageFileName || '참고 이미지') : '',
+          }),
+          signal: controller.signal,
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate layout');
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch {
+            throw new Error(`서버 오류 (${response.status})`);
+          }
+          throw new Error(errorData.error || '레이아웃 생성에 실패했습니다.');
+        }
+
+        const data = await response.json();
+        onLayoutGenerate(data.layout);
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+          throw new Error('요청 시간이 초과되었습니다. 다시 시도해주세요.');
+        }
+        throw fetchError;
       }
-
-      const data = await response.json();
-      onLayoutGenerate(data.layout);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
     } finally {
       setIsLoading(false);
     }
@@ -160,11 +143,34 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
             accept="image/*"
             className="block w-full text-sm text-gray-600 file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             onChange={(e) => {
-              const hasFile = !!(e.target.files && e.target.files.length > 0);
-              setHasImage(hasFile);
-              setImageType(hasFile ? '로고 또는 아이콘' : '');
+              const file = e.target.files?.[0];
+              if (file) {
+                setHasImage(true);
+                setImageFileName(file.name);
+                
+                // 파일 타입에 따라 이미지 타입 판단
+                const fileName = file.name.toLowerCase();
+                let detectedType = '참고 이미지';
+                if (fileName.includes('logo') || fileName.includes('로고')) {
+                  detectedType = '로고';
+                } else if (fileName.includes('icon') || fileName.includes('아이콘')) {
+                  detectedType = '아이콘';
+                } else if (file.type.startsWith('image/')) {
+                  detectedType = '참고 이미지';
+                }
+                setImageType(detectedType);
+              } else {
+                setHasImage(false);
+                setImageFileName('');
+                setImageType('');
+              }
             }}
           />
+          {imageFileName && (
+            <p className="mt-2 text-xs text-blue-600 font-medium">
+              선택된 파일: {imageFileName}
+            </p>
+          )}
           <p className="mt-2 text-xs text-gray-500">로고, 아이콘 등의 레퍼런스 이미지를 업로드하세요</p>
         </div>
       </div>

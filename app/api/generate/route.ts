@@ -15,6 +15,18 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error in /api/generate:', error);
     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-    return NextResponse.json({ error: `Failed to generate layout: ${errorMessage}` }, { status: 500 });
+    
+    // API 키 관련 에러인 경우 명확한 메시지 제공
+    if (errorMessage.includes('ANTHROPIC_API_KEY')) {
+      return NextResponse.json(
+        { error: 'API 키가 설정되지 않았습니다. 환경 변수를 확인해주세요.' },
+        { status: 500 }
+      );
+    }
+    
+    return NextResponse.json(
+      { error: `레이아웃 생성 실패: ${errorMessage}` },
+      { status: 500 }
+    );
   }
 }
