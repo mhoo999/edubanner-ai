@@ -7,8 +7,10 @@ interface Step2RecommendProps {
 
 const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
   const [purpose, setPurpose] = useState('')
+  const [customPurpose, setCustomPurpose] = useState('')
   const [keywords, setKeywords] = useState('')
   const [mood, setMood] = useState('')
+  const [customMood, setCustomMood] = useState('')
   const [recommendedThemes, setRecommendedThemes] = useState<
     ThemeRecommendation[]
   >([])
@@ -25,6 +27,10 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
       setRecommendedThemes([])
     }
     setError(null)
+
+    const finalPurpose = purpose === 'custom' ? customPurpose : purpose
+    const finalMood = mood === 'custom' ? customMood : mood
+
     try {
       // 타임아웃 설정 (60초)
       const controller = new AbortController()
@@ -35,9 +41,9 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            purpose,
+            purpose: finalPurpose,
             keywords,
-            mood,
+            mood: finalMood,
             existingThemes: loadMore ? recommendedThemes : [],
           }),
           signal: controller.signal,
@@ -79,6 +85,12 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
     }
   }
 
+  const isButtonDisabled =
+    isLoading ||
+    !keywords ||
+    (purpose === 'custom' ? !customPurpose : !purpose) ||
+    (mood === 'custom' ? !customMood : !mood)
+
   return (
     <div className="w-full max-w-4xl mx-auto p-8 bg-white rounded-xl shadow-lg">
       <h2 className="mb-6 text-2xl font-bold text-gray-900 text-center">
@@ -107,7 +119,17 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
             <option value="교재/도서 출간 안내">교재/도서 출간 안내</option>
             <option value="합격/수강 후기 이벤트">합격/수강 후기 이벤트</option>
             <option value="특별 할인 프로모션">특별 할인 프로모션</option>
+            <option value="custom">직접 입력</option>
           </select>
+          {purpose === 'custom' && (
+            <input
+              type="text"
+              className="block w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              value={customPurpose}
+              onChange={(e) => setCustomPurpose(e.target.value)}
+              placeholder="용도를 직접 입력하세요"
+            />
+          )}
         </div>
         <div>
           <label
@@ -144,13 +166,39 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
             <option value="활기차고 동기부여하는">활기차고 동기부여하는</option>
             <option value="차분하고 학구적인">차분하고 학구적인</option>
             <option value="세련되고 현대적인">세련되고 현대적인</option>
+            <option value="토스처럼 직관적인">토스처럼 직관적인</option>
+            <option value="오늘의집처럼 감성적인">오늘의집처럼 감성적인</option>
+            <option value="마켓컬리처럼 세련된">마켓컬리처럼 세련된</option>
+            <option value="29CM처럼 힙한">29CM처럼 힙한</option>
+            <option value="미니멀하고 깔끔한">미니멀하고 깔끔한</option>
+            <option value="따뜻하고 친근한">따뜻하고 친근한</option>
+            <option value="강렬하고 역동적인">강렬하고 역동적인</option>
+            <option value="고급스럽고 우아한">고급스럽고 우아한</option>
+            <option value="재미있고 창의적인">재미있고 창의적인</option>
+            <option value="자연적이고 편안한">자연적이고 편안한</option>
+            <option value="기술적이고 미래지향적인">
+              기술적이고 미래지향적인
+            </option>
+            <option value="클래식하고 전통적인">클래식하고 전통적인</option>
+            <option value="빈티지하고 레트로한">빈티지하고 레트로한</option>
+            <option value="화려하고 개성있는">화려하고 개성있는</option>
+            <option value="custom">직접 입력</option>
           </select>
+          {mood === 'custom' && (
+            <input
+              type="text"
+              className="block w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              value={customMood}
+              onChange={(e) => setCustomMood(e.target.value)}
+              placeholder="분위기를 직접 입력하세요"
+            />
+          )}
         </div>
       </div>
       <button
         onClick={() => handleRecommendThemes(false)}
         className="w-full px-6 py-4 mb-6 text-white text-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-        disabled={isLoading || !purpose || !keywords || !mood}
+        disabled={isButtonDisabled}
       >
         {isLoading ? (
           <span className="flex items-center justify-center gap-2">
@@ -158,7 +206,7 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
               className="animate-spin h-5 w-5"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
-              viewBox="0 0 24 24"
+              viewBox="0 0 24"
             >
               <circle
                 className="opacity-25"
@@ -345,7 +393,7 @@ const Step2Recommend: React.FC<Step2RecommendProps> = ({ onThemeSelected }) => {
                   className="animate-spin h-5 w-5"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
-                  viewBox="0 0 24 24"
+                  viewBox="0 0 24"
                 >
                   <circle
                     className="opacity-25"
