@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Step2Recommend from '@/components/Step2Recommend';
 import Step3Input from '@/components/Step3Input';
 import Step4Result from '@/components/Step4Result';
@@ -184,9 +185,15 @@ export default function Home() {
       {/* Footer */}
       <footer className="mt-auto py-6 border-t border-gray-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 mb-2">
             © 2025 EduBanner AI. Designed for Megazone Education Division Design Team.
           </p>
+          <Link
+            href="/privacy"
+            className="text-xs text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+          >
+            개인정보처리방침
+          </Link>
         </div>
       </footer>
     </div>

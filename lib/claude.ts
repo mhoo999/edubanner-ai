@@ -118,7 +118,11 @@ Provide the response in JSON format with a "themes" array. Each theme must inclu
 
 Korean education banner design patterns to reference:
 - Color: While Navy/Blue (#0269cc, #5064c8) + Orange/Gold (#ff6465, #ffd800) is common, EXPLORE diverse palettes beyond this
-- Fonts: Pretendard Bold 48-60px for titles, Medium 28-32px for subtitles, Regular 14-16px for body
+- Fonts: Recommend trendy Sandoll Cloud Korean fonts.
+  - Title: Sandoll 격동고딕, Sandoll 제비 (Bold, 48-60px)
+  - Subtitle: Sandoll 고딕Neo 1, Sandoll 명조Neo 1 (Medium, 28-32px)
+  - Body: Sandoll 고딕Neo 3, Sandoll 명조Neo 3 (Regular, 14-16px)
+  - Point: Sandoll 미생, Sandoll 단밤 (for emphasis, varied sizes)
 - Layout: Left text (60%) + Right image (40%), generous padding (30-40px), or center-aligned, or asymmetric layouts
 - Visuals: Real photos (classroom, students) + minimal icons + certificate badges, or illustrations, or abstract graphics
 - Tone: Professional yet approachable, trustworthy yet warm, or modern and dynamic, or elegant and sophisticated
