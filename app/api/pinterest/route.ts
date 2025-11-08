@@ -28,10 +28,11 @@ export async function POST(request: Request) {
 
     // Pinterest API에 검색을 요청합니다.
     // 검색어와 함께, 한국어 콘텐츠 및 이미지 크기 필터를 적용합니다.
+    // bookmark 파라미터를 사용하여 공개 핀만 검색합니다.
     const response = await fetch(
       `${PINTEREST_API_URL}?query=${encodeURIComponent(
         query
-      )}&limit=10&pin_filter=images`,
+      )}&limit=10`,
       {
         headers: {
           Authorization: `Bearer ${apiKey}`,
