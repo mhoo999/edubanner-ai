@@ -17,14 +17,16 @@ export default function Home() {
   const [currentStep, setCurrentStep] = useState<Step>(Step.ThemeRecommend);
   const [selectedTheme, setSelectedTheme] = useState<ThemeRecommendation | null>(null);
   const [generatedLayout, setGeneratedLayout] = useState<string>('');
+  const [platform, setPlatform] = useState<string>('web');
 
   const handleThemeSelected = (theme: ThemeRecommendation) => {
     setSelectedTheme(theme);
     setCurrentStep(Step.DetailInput);
   };
 
-  const handleLayoutGenerate = (layout: string) => {
+  const handleLayoutGenerate = (layout: string, platform: string) => {
     setGeneratedLayout(layout);
+    setPlatform(platform);
     setCurrentStep(Step.Result);
   };
 
@@ -59,6 +61,7 @@ export default function Home() {
         return (
           <Step4Result 
             generatedLayout={generatedLayout} 
+            platform={platform}
             onReset={handleReset}
             onEdit={() => setCurrentStep(Step.DetailInput)}
           />

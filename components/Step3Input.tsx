@@ -3,13 +3,14 @@ import { ThemeRecommendation } from '@/lib/claude';
 
 interface Step3InputProps {
   selectedTheme: ThemeRecommendation;
-  onLayoutGenerate: (layout: string) => void;
+  onLayoutGenerate: (layout: string, platform: string) => void;
   onBack: () => void;
 }
 
 const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate, onBack }) => {
   const [width, setWidth] = useState(1200);
   const [height, setHeight] = useState(628);
+  const [platform, setPlatform] = useState('web');
   const [textContent, setTextContent] = useState('');
   const [hasImage, setHasImage] = useState(false);
   const [imageType, setImageType] = useState('');
@@ -43,6 +44,7 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
           body: JSON.stringify({
             theme: selectedTheme,
             size: { width: finalWidth, height: finalHeight },
+            platform,
             textLines,
             hasImage,
             imageType: hasImage ? (imageType || imageFileName || '참고 이미지') : '',
@@ -63,7 +65,7 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
         }
 
         const data = await response.json();
-        onLayoutGenerate(data.layout);
+        onLayoutGenerate(data.layout, platform);
       } catch (fetchError) {
         clearTimeout(timeoutId);
         if (fetchError instanceof Error && fetchError.name === 'AbortError') {
@@ -113,7 +115,7 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
                 try {
                   await navigator.clipboard.writeText(item.color);
                   // 간단한 피드백 (선택사항)
-                } catch (err) {
+                } catch {
                   // 클립보드 복사 실패 시 무시
                 }
               }}
@@ -133,6 +135,40 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
       <h2 className="mb-6 text-2xl font-bold text-gray-900 text-center">배너 상세 정보 입력</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        {/* 플랫폼 선택 */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm4 12a1 1 0 100-2H4a1 1 0 100 2h2zm10-2a1 1 0 100 2h2a1 1 0 100-2h-2zM5 7a1 1 0 00-1 1v6a1 1 0 001 1h10a1 1 0 001-1V8a1 1 0 00-1-1H5z" />
+            </svg>
+            플랫폼 선택
+          </label>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="platform"
+                value="web"
+                checked={platform === 'web'}
+                onChange={() => setPlatform('web')}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+              />
+              <span className="text-sm font-medium text-gray-700">웹용</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="platform"
+                value="mobile"
+                checked={platform === 'mobile'}
+                onChange={() => setPlatform('mobile')}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+              />
+              <span className="text-sm font-medium text-gray-700">모바일용</span>
+            </label>
+          </div>
+        </div>
+
         {/* 배너 크기 */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1">
