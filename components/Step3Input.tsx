@@ -181,7 +181,7 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
           <div className="mb-2 flex flex-wrap gap-2">
             {[
               { label: '웹용', w: 1920, h: 500 },
-              { label: '모바일용', w: 750, h: 750 },
+              { label: '모바일용', w: 740, h: 740 },
               { label: 'Facebook', w: 1200, h: 628 },
               { label: 'Instagram', w: 1080, h: 1080 },
               { label: 'Twitter', w: 1200, h: 675 },
@@ -299,12 +299,29 @@ const Step3Input: React.FC<Step3InputProps> = ({ selectedTheme, onLayoutGenerate
 
       {/* 텍스트 내용 */}
       <div className="w-full mb-6">
-        <label htmlFor="textContent" className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1">
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-          </svg>
-          텍스트 내용
-        </label>
+        <div className="flex justify-between items-center mb-2">
+          <label htmlFor="textContent" className="block text-sm font-semibold text-gray-700 flex items-center gap-1">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+            </svg>
+            텍스트 내용
+          </label>
+          {/* 용도 프리셋 */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-medium text-gray-500">용도 프리셋:</span>
+            <button
+              type="button"
+              onClick={() => setTextContent(`2026년 1학기 1기수
+2025년 12월 4일 개강반
+신청기간: 25년 11월 01일(토) ~ 12월 03일(수)
+수강료: 500,000원
+선착순 30명 한정`)}
+              className="px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 hover:border-green-300 transition-all"
+            >
+              개강 안내
+            </button>
+          </div>
+        </div>
         <textarea
           id="textContent"
           rows={6}
